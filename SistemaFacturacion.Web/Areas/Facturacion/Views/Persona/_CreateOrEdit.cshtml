@@ -1,0 +1,209 @@
+﻿@inject Microsoft.AspNetCore.Mvc.Localization.IViewLocalizer localizer
+@using SistemaFacturacion.Web.Areas.Facturacion.Models;
+@model PersonaViewModel
+
+
+<form id="create-form" name="createoredit" method="post" asp-controller="Persona"  asp-action="OnPostCreateOrEdit" asp-route-id="@Model.Id"  enctype="multipart/form-data">
+
+    <div class="row">
+        <div class="col-md-12">
+            <div class="form-group row">
+          
+               <div class="col-md-3">
+                    <label class="col-md-12 col-form-label texto-pregunta" asp-for="Nombres"></label>
+                    <input asp-for="Nombres" type="text" name="Nombres" class="form-control" required/>
+                    <span asp-validation-for="Nombres" class="text-danger"></span>
+                </div>
+
+                <div class="col-md-3">
+                    <label class="col-md-12 col-form-label texto-pregunta" asp-for="Apellidos"></label>
+                    <input asp-for="Apellidos" type="text" name="Apellidos" class="form-control" required/>
+                    <span asp-validation-for="Apellidos" class="text-danger"></span>
+                </div>
+                <div class="col-md-3">  
+                    <label class="col-md-12 col-form-label texto-pregunta" asp-for="TipoIdentifiacion"></label>
+                    @Html.DropDownListFor(x => x.TipoIdentifiacion, (IEnumerable<SelectListItem>)Model.TipoIdentifiacionList, new { @class = "form-control",required = "required" })
+                    <span asp-validation-for="TipoIdentifiacion" class="text-danger"></span>
+                </div>
+              <div class="col-md-3">
+                    <label class="col-md-12 col-form-label texto-pregunta" asp-for="Identificaion"></label>
+                    <input asp-for="Identificaion" type="text" maxlength=15 name="Identificaion" class="form-control" required />
+                    <span asp-validation-for="Identificaion" class="text-danger"></span>
+                </div>
+            </div>
+
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            <div class="form-group row">
+
+
+                <div class="col-md-4">
+                    <label class="col-md-12 col-form-label texto-pregunta" asp-for="TipoCliente"></label>
+                    @Html.DropDownListFor(x => x.TipoCliente, (IEnumerable<SelectListItem>)Model.TipoClienteList, new { @class = "form-control",required = "required" })
+                    <span asp-validation-for="TipoCliente" class="text-danger"></span>
+                </div>
+                
+            </div>
+
+        </div>
+    </div>
+         <div class="row">
+        <div class="col-md-12">
+            <div class="form-group row">
+                <div class="col-md-12">
+                    <label class="col-md-12 col-form-label texto-pregunta" asp-for="Direccion"></label>
+                    <textarea asp-for="Direccion" type="text" name="Direccion" class="form-control" rows="3" required></textarea>
+                    <span asp-validation-for="Direccion" class="text-danger"></span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+    @*<hr />*@
+
+
+ 
+    <div class="row">
+        <div class="col-md-12">
+            <div class="form-group row">
+
+                <div class="col-md-12">
+                    <div class="form-group row">
+                   
+                        <div class="col-md-2">
+                            <label class="col-md-12 col-form-label texto-pregunta" asp-for="TelefonoConvencional"></label>
+                            <input asp-for="TelefonoConvencional" maxlength=7 type="text" name="TelefonoConvencional" class="form-control" />
+                            <span asp-validation-for="TelefonoConvencional" class="text-danger"></span>
+                        </div>
+                        <div class="col-md-2">
+                            <label class="col-md-12 col-form-label texto-pregunta" asp-for="TelefonoCelular"></label>
+                            <input asp-for="TelefonoCelular" type="text" maxlength=10 name="TelefonoCelular" class="form-control" required/>
+                            <span asp-validation-for="TelefonoCelular" class="text-danger"></span>
+                        </div>
+                      
+                        <div class="col-md-4">
+                            <label class="col-md-12 col-form-label texto-pregunta" asp-for="Email"></label>
+                            <input asp-for="Email" type="text" name="Email" class="form-control"  required/>
+                            <span asp-validation-for="Email" class="text-danger"></span>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+    </div>
+     <div class="form-group justify-content-between" style="margin-bottom: 0px !important">
+         
+                <input type="hidden" value="false" name="band" id="band" />
+                <button type="submit" class="btn btn-info" style="background-color:blue !important">Guardar</button>
+                
+        <button type="submit" id="btnCancelar" class="btn btn-default close-button" data-dismiss="modal">Cancelar</button>
+    </div>
+
+</form>
+
+<script type="text/javascript" language=javascript>
+    $.validator.unobtrusive.parse(document);
+             
+    $("#create-form").on("submit", function(e) {
+        e.preventDefault();
+
+
+        if (@Model.Vienede == 0)  {
+
+                return jQueryModalPost(this);
+         } else {
+          
+            if ($("#create-form")[0].checkValidity()) {
+                $("#create-form")[0].submit();
+            }
+            else { $("#create-form")[0].reportValidity(); }
+                   
+             
+              return true;
+        }
+
+    });
+
+    //Logo
+    //$('#input-file-logo').fileinput({
+    //    language: "es",
+    //    showUpload: false,
+    //    maxFileCount: 1,
+    //    inputGroupClass: "input-group-sm",
+    //    allowedFileExtensions: ["jpg", "png", "jpeg", "gif", "pdf", "xlsx"],
+    //}).on('fileloaded', function() {
+    //    //validarDimensiones();
+    //});
+
+    
+    $("#RUC").change(function() {
+
+        var valor = $("#Identificaion").val(); 
+        var tipo = $("#Cedula").val();
+
+        if (tipo==1)
+        {
+            if (valor.length < 13) {
+                $("#Identificaion").focus();
+                Swal.fire("¡Advertencia!", "Ingrese un numero de Documento valido", "warning");
+                $('#Identificaion').prop('checked', false);
+                $("#Identificaion").val("");
+
+                return false;
+
+            }
+        }
+        else
+        {
+            if (valor.length != 10) {
+                $("#Identificaion").focus();
+                Swal.fire("¡Advertencia!", "Ingrese un numero de Documento valido", "warning");
+                $('#Identificaion').prop('checked', false);
+                $("#Identificaion").val("");
+
+                return false;
+
+            }
+        }  
+
+    });
+    $("#TelefonoCelular").change(function() {
+
+        var valor = $("#TelefonoCelular").val();
+
+        if (valor.length != 10) {
+            $("#TelefonoCelular").focus();
+            Swal.fire("¡Advertencia!", "Ingrese un numero de celular valido", "warning");
+            $('#WhatsApp').prop('checked', false);
+            $("#TelefonoCelular").val("");
+
+            return false;
+
+        }
+
+    });
+
+
+  
+    $("#Cedula").change(function() {
+        var tipo = $("#Cedula").val();
+
+        if (tipo == 2) {
+            $("#Identificaion").attr('maxlength', '10');
+        }
+        else {
+            $("#Identificaion").attr('maxlength', '13');
+        }
+
+
+    });
+                        
+
+
+</script>

@@ -1,0 +1,63 @@
+﻿@using SistemaFacturacion.Web.Areas.Facturacion.Models
+@model PersonaViewModel
+
+<div class="container-fluid" style="padding: 0px 25px !important;">
+    @*div class="row">
+        <div class="col-md-12">
+             <label class="col-md-12 col-form-label texto-pregunta" style="color:black;font-weight: bold;">@Model.Colaborador</label>
+        </div>
+    </div>*@
+
+    <div class="row" style="border:2px;border-style:solid;padding:5px 5px 5px 5px;    border-color: #2ED4E0;">
+        <div class="col-md-12">
+
+            <div class="row">
+                <div class="col-md-12">
+                    <label class="col-md-12 col-form-label texto-pregunta" style="color:#666666"><font style="font-weight: bold;font-size:18px!important;color:#46bb95"><u>Sistema de Facturación</u></font></label>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-12">
+                    <label class="col-md-12 col-form-label texto-pregunta">
+                        <b>
+                            Registrar un nuevo Cliente/Proveedor
+                        </b>
+                    </label>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<br />
+
+<div class="card card-info">
+    <div class="card-header card-header-int">
+
+        <label class="col-md-12 col-form-label texto-pregunta"><font style="font-weight: bold;">Ingresar Información</font> </label>
+    </div>
+    <div class="card-body" style="padding:15px 20px 20px 20px !important">
+      <div id="edit" class="card-body table-responsive">
+        </div>                                                     
+    </div>
+</div>
+                                         
+@section Scripts
+{
+<script src="~/js/site.js"></script>
+<script>
+    function limpiarFormulario() {
+    document.getElementById("create-form").reset();
+  }
+
+    $(document).ready(function () {
+          loadData();
+      });
+         function loadData() {
+          
+            $('#edit').load('/Facturacion/Persona/OnGetCreate?vienede=1');
+        }
+ 
+   
+ </script>
+}

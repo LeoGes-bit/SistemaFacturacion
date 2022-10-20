@@ -1,0 +1,254 @@
+﻿@using SistemaFacturacion.Web.Areas.Facturacion.Models
+@model PersonaViewModel
+
+
+<div class="container-fluid" style="padding: 0px 25px !important;">
+    <div class="row">
+        <div class="col-md-12">
+            <label class="col-md-12 col-form-label texto-pregunta" style="color:black;font-weight: bold;"></label>
+        </div>
+    </div>
+
+    <div class="row" style="border:2px;border-style:solid;padding:5px 5px 5px 5px;    border-color: #2ED4E0;">
+        <div class="col-md-12">
+
+            <div class="row">
+                <div class="col-md-12">
+                    <label class="col-md-12 col-form-label texto-pregunta" style="color:#666666"><font style="font-weight: bold;font-size:18px!important;color:#46bb95"><u>Sistema De Facturación</u></font></label>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-12">
+                    <label class="col-md-12 col-form-label texto-pregunta">
+                        <b>
+                            *Información 
+                        </b>
+                    </label>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<br />
+
+
+
+<div class="card card-info">
+   
+    <div class="card-header card-header-int">
+
+        <label class="col-md-12 col-form-label texto-pregunta"><font style="font-weight: bold;">Lista de Clientes</font> </label>
+        
+    </div>    
+  
+    <div class="card-body" style="padding:15px 20px 20px 20px !important">
+
+        <div class="col-12">
+             <a onclick="jQueryModalGet('/Facturacion/Persona/OnGetCreateOrEdit','Crear Persona')" class="btn bg-success">
+            <i class="fa fa-plus-square"></i> Nuevo
+             </a>
+             <br />
+             <br />
+            <div class="form-group row">
+                <div class="col-md-3">
+                    <label class="col-md-12 col-form-label texto-pregunta">Nombres</label>
+                   <input type="text" id="Nombres"   name="Nombres"  class="form-control form-control-sm "/>
+                </div>
+                 <div class="col-md-3">
+                    <label class="col-md-12 col-form-label texto-pregunta">Apellidos</label>
+                   <input type="text" id="Apellidos"   name="Apellidos"  class="form-control form-control-sm "/>
+                </div>
+                 <div class="col-md-3">
+                    <label class="col-md-12 col-form-label texto-pregunta">Identificacion</label>
+                   <input type="text" id="Identificacion"  maxlength=15 name="Identificacion"  class="form-control form-control-sm "/>
+                </div>
+               
+                <div class="col-md-2" style="padding:25px 10px 30px 55px">
+                    <a class="btn btn-sm btn-labeled btn-success" href="#" onclick="buscarPersona()">
+                        <span class="btn-label pr-1">
+                            <i class="fa fa-search"></i>
+                        </span>
+                        Buscar Datos
+                    </a>
+                </div>
+               
+      
+            </div>
+        </div>
+
+        
+              
+
+    </div>
+         
+    </div>
+
+<table id="personaTable" class="table table-striped " width="100%" cellspacing="0">
+            <thead>
+                <tr>
+
+                     
+                    <th data-priority="1">Nombres</th>
+                    <th data-priority="1">Apellidos</th>
+                    <th data-priority="1">Identificación</th>
+                    <th data-priority="1">Tipo Cliente</th>
+                    <th data-priority="2" class="acciones-th">Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+        
+            </tbody>
+             <tfoot>
+             </tfoot>
+</table>
+
+@section Scripts
+    {
+     
+    <script src="~/lib/bootstrap-datepicker/js/bootstrap-datepicker.min.js"></script>
+    <script src="~/lib/bootstrap-datepicker/locales/bootstrap-datepicker.es.min.js"></script>
+    <script src="~/lib/bootstrap-select/js/bootstrap-select.min.js"></script>
+    
+    <script src="~/js/site.js"></script>
+    <script>
+
+ 
+   let tableMain = null;
+        let config = {
+            id: "personaTable",
+            dateFormat: '{dd}/{MM}/{yyyy}',
+            language: { url: dataTableLangPath},
+            ajax: {
+                url: "@Url.Action("LoadAll", "Persona")",
+                method: 'POST',
+                dataType: "json",
+                contentType: "application/json",
+                dataSrc: function (e) {
+                    
+                    return e.data;
+                },
+                data: function(d) {
+                    var filtros = new Object();
+
+                    var datos = 0;
+
+                     datos = "";
+                    if ($("#Identificacion").val() != "") {
+                        datos = $("#Identificacion").val();
+                    }
+                    filtros.identificacion = datos;
+
+                    datos = "";
+                    if ($("#Nombres").val() != "") {
+                        datos = $("#Nombres").val();
+                    }
+                    filtros.nombres = datos;
+
+                    datos = "";
+                    if ($("#Apellidos").val() != "") {
+                        datos = $("#Apellidos").val();
+                    }
+                    filtros.apellidos = datos;
+
+                   
+                   //filtros.tipoPantalla =@Model.TipoPantalla;
+
+                    return JSON.stringify(filtros);
+                }
+            },
+            dom: "Bfrtip",
+            buttons: [
+                'copyHtml5',
+                'excelHtml5',
+                'csvHtml5',
+                'pdfHtml5'
+            ],
+            columns: [
+                
+                { width: '30%', filter: 'input', type: 'string', data: 'nombres' },
+                { width: '20%', filter: 'input', type: 'string', data: 'apellidos' },
+                { width: '20%', filter: 'input', type: 'string', data: 'identificaion' },
+                { width: '20%', filter: 'input', type: 'string', data: 'tipoCliente' },
+               
+               
+                
+                {
+                    width: '2%', filter: 'none', type: 'none', data: null, orderable: false,
+                    render: function (data, type, row) {
+                        var cuerpo = `<div class="btn-group " role="group" aria-label="Acciones">`;
+                        //cuerpo += "<a class='btn btn-danger  btn-xp btnFideliza' href='#' onclick='fidelizar(" + JSON.stringify(row) + ")'><span><i class='fa fa-handshake-o'></i></span></a>";
+                            cuerpo += "&nbsp;&nbsp;<a class='btn btn-success  btn-xp btnEditar' href='#' onclick='editar(" + JSON.stringify(row) + ")'><span><i class='fas fa-edit'></i></span></a>";
+                        
+                          cuerpo += `</div>`;  
+                            return cuerpo;
+                    }
+                }
+
+                
+            ],
+            drawCallback: function () {
+                //tippy(".btnFideliza", { content: "Validación de Datos" });
+                tippy(".btnEditar", { content: "Editar" });
+                tippy(".btnEliminar", { content: "Eliminar" });
+                //$('input[data-toggle=toggle]').bootstrapToggle();
+            },
+            initComplete: function () {
+                reHandle();
+            },
+            order: []
+        };
+
+        function reHandle() {
+            fillSelectFilter(config, tableMain)
+            finishLoading();
+        }
+
+
+    $(document).ready(function () {
+         tableMain = LoadTableWithAjax(config);
+     
+      });
+
+      function editar(fila) {
+
+          jQueryModalGet('/Facturacion/Persona/OnGetCreateOrEdit?id='+fila.id,'Editar Persona');
+          //jQueryModalGet('/Donacion/Interacion/OnGetCreateOrEdit?idDonante='+fila.id'&vienede=1','Donante')
+       }
+       // function fidelizar(fila) {
+
+       //   jQueryModalGet('/Donacion/Interacion/OnGetCreateOrEdit?idDonante='+fila.id+'&tipoPantalla='+@Model.TipoPantalla,@Model.TipoPantalla==1?'Interación de Validación de Datos':@Model.TipoPantalla==2?'Interación de Kit de Entrega' : 'Fidelización Cobranza');
+       //}
+
+       function buscarPersona() {
+        
+            startLoading();
+          
+            tableMain.ajax.reload(reHandle, true);
+        }
+
+
+    $('#Identificacion').on('input', function() {
+        this.value = this.value.replace(/[^0-9]/g, '');
+       
+
+    });
+
+       $("#Identificacion").change(function() {
+
+        var valor = $("#Identificacion").val();
+
+        if (valor.length < 10) {
+            $("#Identificacion").focus();
+            Swal.fire("¡Advertencia!", "Ingrese un número de Identificación valido", "warning");
+             $("#Identificacion").val("");
+
+            return false;
+
+        }
+
+
+    });
+    </script>
+}
+
